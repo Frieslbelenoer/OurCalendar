@@ -1,0 +1,107 @@
+.mini-calendar {
+    width: 100%;
+}
+
+.mini-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.mini-calendar-header h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.mini-calendar-nav {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.nav-arrow:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.mini-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.weekday-header {
+    text-align: center;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: var(--spacing-xs);
+}
+
+.day-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    font-weight: 400;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.day-cell:hover {
+    background: var(--bg-hover);
+}
+
+.day-cell.other-month {
+    color: var(--text-muted);
+}
+
+.day-cell.today {
+    background: var(--accent-purple);
+    color: white;
+    font-weight: 600;
+}
+
+.day-cell.today:hover {
+    background: var(--accent-purple-light);
+}
+
+.day-cell.selected:not(.today) {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--accent-purple-light);
+    font-weight: 600;
+}
+
+.event-dot {
+    position: absolute;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-green);
+    border-radius: 50%;
+}
+
+.day-cell.today .event-dot {
+    background: white;
+}

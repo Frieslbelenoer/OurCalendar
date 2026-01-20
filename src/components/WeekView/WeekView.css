@@ -1,0 +1,223 @@
+.week-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: var(--bg-primary);
+}
+
+.calendar-title h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.timezone-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.week-navigation {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+}
+
+.week-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.week-nav-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.day-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 60px;
+}
+
+.day-tab:hover {
+    background: var(--bg-hover);
+}
+
+.day-tab.active {
+    background: var(--accent-purple);
+    color: white;
+}
+
+.day-tab.today:not(.active) {
+    color: var(--accent-purple);
+}
+
+.day-name {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.day-number {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.view-mode-toggle {
+    display: flex;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 4px;
+}
+
+.mode-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.mode-btn:hover {
+    color: var(--text-primary);
+}
+
+.mode-btn.active {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Calendar Grid */
+.calendar-grid-container {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    padding: 0 var(--spacing-xl);
+}
+
+.calendar-grid {
+    display: flex;
+    min-height: 100%;
+}
+
+.time-column {
+    width: 80px;
+    flex-shrink: 0;
+    padding-top: 0;
+}
+
+.time-slot {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-right: var(--spacing-md);
+    border-top: 1px solid transparent;
+}
+
+.time-slot span {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    transform: translateY(-8px);
+}
+
+.day-column {
+    flex: 1;
+    position: relative;
+    border-left: 1px solid var(--border-color);
+}
+
+.day-column.today-column {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.day-events-container {
+    position: absolute;
+    inset: 0;
+    padding: 0 4px;
+    z-index: 1;
+}
+
+.hour-cell {
+    border-top: 1px solid var(--border-color);
+    position: relative;
+}
+
+.hour-cell::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1px dashed rgba(45, 45, 74, 0.5);
+}
+
+/* Add Event FAB */
+.add-event-fab {
+    position: fixed;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-xl);
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: var(--accent-purple);
+    color: white;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    transition: all var(--transition-fast);
+    z-index: 100;
+}
+
+.add-event-fab:hover {
+    background: var(--accent-purple-light);
+    transform: scale(1.05);
+}
+
+.add-event-fab:active {
+    transform: scale(0.95);
+}
