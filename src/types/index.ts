@@ -8,6 +8,8 @@ export interface User {
     lastSeen: Date | null;
     currentActivity: string;
     createdAt: Date;
+    gamingRole?: string; // e.g. "Support/Healer", "Duelist"
+    favoriteGame?: string; // e.g. "Valorant"
 }
 
 export interface CalendarEvent {
@@ -17,6 +19,7 @@ export interface CalendarEvent {
     startTime: Date;
     endTime: Date;
     color: EventColor;
+    eventType?: 'gaming' | 'hangout' | 'work' | 'other';
     createdBy: string;
     participants: string[];
     meetingLink?: string;
@@ -31,7 +34,8 @@ export type EventColor =
     | 'purple'
     | 'orange'
     | 'pink'
-    | 'teal';
+    | 'teal'
+    | 'gray';
 
 export interface TimeBreakdown {
     category: string;

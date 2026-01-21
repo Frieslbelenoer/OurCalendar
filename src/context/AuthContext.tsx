@@ -91,7 +91,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setError(null);
             await signInWithGoogle();
         } catch (err: any) {
-            setError(err.message);
+            console.error("Auth Error:", err);
+            if (err.code === 'auth/unauthorized-domain') {
+                setError(`Domain unauthorized (${window.location.hostname}). Add it to Firebase Console > Auth > Settings > Domains.`);
+            } else {
+                setError(err.message);
+            }
         }
     };
 
@@ -100,7 +105,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setError(null);
             await signInWithEmail(email, password);
         } catch (err: any) {
-            setError(err.message);
+            console.error("Auth Error:", err);
+            if (err.code === 'auth/unauthorized-domain') {
+                setError(`Domain unauthorized (${window.location.hostname}). Add it to Firebase Console > Auth > Settings > Domains.`);
+            } else {
+                setError(err.message);
+            }
         }
     };
 

@@ -16,6 +16,10 @@ interface CalendarContextType {
     loading: boolean;
     selectedDate: Date;
     setSelectedDate: (date: Date) => void;
+    viewMode: 'day' | 'week' | 'month';
+    setViewMode: (mode: 'day' | 'week' | 'month') => void;
+    filterMyEvents: boolean;
+    setFilterMyEvents: (filter: boolean) => void;
     createEvent: (event: Omit<CalendarEvent, 'id' | 'createdBy'>) => Promise<void>;
     updateEvent: (id: string, event: Partial<CalendarEvent>) => Promise<void>;
     deleteEvent: (id: string) => Promise<void>;
@@ -121,11 +125,18 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
     };
 
+    const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('week');
+    const [filterMyEvents, setFilterMyEvents] = useState(false);
+
     const value: CalendarContextType = {
         events,
         loading,
         selectedDate,
         setSelectedDate,
+        viewMode,
+        setViewMode,
+        filterMyEvents,
+        setFilterMyEvents,
         createEvent,
         updateEvent,
         deleteEvent,

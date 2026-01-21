@@ -3,20 +3,22 @@ import { useAuth } from '../../context/AuthContext';
 import { useUsers } from '../../context/UsersContext';
 import { useCalendar } from '../../context/CalendarContext';
 import { MiniCalendar } from '../MiniCalendar';
-import { format, isToday } from 'date-fns';
+import { format, isSameMonth } from 'date-fns';
 import './Sidebar.css';
 
 export const Sidebar: React.FC = () => {
     const { user } = useAuth();
     const { allUsers, onlineUsers } = useUsers();
-    const { events, selectedDate } = useCalendar();
+    const { events, selectedDate, filterMyEvents, setFilterMyEvents } = useCalendar();
     const [showAllUsers, setShowAllUsers] = useState(false);
 
-    // Get today's events
-    const todayEvents = events.filter(event => {
-        const eventDate = new Date(event.startTime);
-        return isToday(eventDate);
-    }).slice(0, 4);
+    // Get events for the selected month
+    const monthEvents = React.useMemo(() => {
+        return events.filter(event => {
+            const eventDate = new Date(event.startTime);
+            return isSameMonth(eventDate, selectedDate);
+        }).sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    }, [events, selectedDate]);
 
     // Time breakdown data
     const timeBreakdown = [
@@ -35,27 +37,27 @@ export const Sidebar: React.FC = () => {
                 <MiniCalendar />
             </div>
 
-            {/* Upcoming Events Today */}
+            {/* Upcoming Events Month */}
             <div className="sidebar-section">
                 <div className="section-header">
-                    <h3>Upcoming events today</h3>
+                    <h3>What will happen this Month?</h3>
                     <button className="view-all-btn">View all</button>
                 </div>
                 <div className="events-list">
-                    {todayEvents.length > 0 ? (
-                        todayEvents.map(event => (
+                    {monthEvents.length > 0 ? (
+                        monthEvents.slice(0, 5).map(event => (
                             <div key={event.id} className="event-item">
-                                <div className={`event-indicator ${event.color}`}></div>
+                                <div className={`event-indicator ${event.color || 'blue'}`}></div>
                                 <div className="event-details">
                                     <span className="event-title">{event.title}</span>
                                     <span className="event-time">
-                                        {format(new Date(event.startTime), 'HH:mm')} - {format(new Date(event.endTime), 'HH:mm')}
+                                        {format(new Date(event.startTime), 'MMM d, HH:mm')}
                                     </span>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="no-events">No events scheduled for today</p>
+                        <p className="no-events">No events scheduled for this month</p>
                     )}
                 </div>
             </div>
@@ -135,6 +137,19 @@ export const Sidebar: React.FC = () => {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="6,9 12,15 18,9" />
                     </svg>
+                </div>
+                <div className="calendar-list">
+                    <div className="calendar-item">
+                        <label className="checkbox-container">
+                            <input
+                                type="checkbox"
+                                checked={filterMyEvents}
+                                onChange={(e) => setFilterMyEvents(e.target.checked)}
+                            />
+                            <span className="checkmark"></span>
+                            <span className="calendar-name">My Events Only</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </aside>

@@ -1,203 +1,297 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCalendar } from '../../context/CalendarContext';
-import { useUsers } from '../../context/UsersContext';
-import { CalendarEvent, ViewMode } from '../../types';
-import { EventModal } from '../EventModal';
-import { EventCard } from '../EventCard';
+import { getHolidays, Holiday } from '../../services/holidays';
+import { CalendarEvent } from '../../types';
 import {
     format,
+    startOfMonth,
+    endOfMonth,
     startOfWeek,
+    endOfWeek,
+    startOfYear,
     addDays,
+    addMonths,
+    isSameMonth,
     isSameDay,
-    getHours,
-    getMinutes,
-    differenceInMinutes,
-    addWeeks,
-    subWeeks
+    getYear,
+    differenceInMinutes
 } from 'date-fns';
+import { id } from 'date-fns/locale';
 import './WeekView.css';
 
-const HOUR_HEIGHT = 60; // pixels per hour
-const START_HOUR = 8;
-const END_HOUR = 18;
+// Component for the Yearly Overview (The "Reference" Style)
+const YearGridView: React.FC<{ selectedDate: Date, holidays: Holiday[], setSelectedDate: (d: Date) => void, setViewMode: (m: 'day' | 'week' | 'month') => void }> = ({ selectedDate, holidays, setSelectedDate, setViewMode }) => {
+    const yearStart = startOfYear(selectedDate);
+    const monthsToRender = Array.from({ length: 12 }, (_, i) => addMonths(yearStart, i));
 
-export const WeekView: React.FC = () => {
-    const { events, selectedDate, setSelectedDate, createEvent } = useCalendar();
-    const { allUsers } = useUsers();
-    const [viewMode, setViewMode] = useState<ViewMode>('week');
-    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-    const [showEventModal, setShowEventModal] = useState(false);
-    const [currentWeekStart, setCurrentWeekStart] = useState(
-        startOfWeek(selectedDate, { weekStartsOn: 1 })
+    const renderMonth = (baseDate: Date) => {
+        const monthStart = startOfMonth(baseDate);
+        const monthEnd = endOfMonth(monthStart);
+        const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
+        const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
+
+        const rows = [];
+        let days = [];
+        let day = startDate;
+        const monthName = format(monthStart, 'MMMM', { locale: id });
+
+        while (day <= endDate) {
+            for (let i = 0; i < 7; i++) {
+                days.push(day);
+                day = addDays(day, 1);
+            }
+            rows.push(days);
+            days = [];
+        }
+
+        return (
+            <div className="ref-month-wrapper" key={monthStart.toString()}>
+                <div className="ref-month-container">
+                    <div className="ref-month-header">
+                        <span className="ref-month-name">{monthName}</span>
+                    </div>
+                    <div className="ref-days-header">
+                        <div className="ref-header-spacer"></div>
+                        {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d, i) => (
+                            <div key={d} className={`ref-header-cell ${i === 0 ? 'text-red' : ''}`}>
+                                {d}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="ref-days-grid">
+                        {rows.map((week, wIndex) => (
+                            <div key={wIndex} className="ref-week-row">
+                                <div className="ref-week-num">{format(week[0], 'w')}</div>
+                                {week.map((d, dIndex) => {
+                                    const isSunday = dIndex === 0;
+                                    const isHoliday = holidays.find(h => isSameDay(h.start, d));
+                                    const isCurrentMonth = isSameMonth(d, monthStart);
+                                    const isToday = isSameDay(d, new Date());
+
+                                    let className = 'ref-day-cell ';
+                                    if (!isCurrentMonth) className += 'text-grey ';
+                                    else if (isSunday || isHoliday) className += 'text-red ';
+                                    else className += 'text-black ';
+                                    if (isToday) className += 'is-today ';
+
+                                    return (
+                                        <div
+                                            key={dIndex}
+                                            className={className}
+                                            onClick={() => {
+                                                setSelectedDate(d);
+                                                setViewMode('week'); // Switch to Week View on click for granularity
+                                            }}
+                                        >
+                                            <span className="day-value">{format(d, 'd')}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="ref-month-holidays">
+                        {holidays.filter(h => isSameMonth(h.start, monthStart)).map((h, i) => (
+                            <div key={i} className="ref-month-holiday-item">
+                                <span className="ref-holiday-date">{format(h.start, 'd', { locale: id })}</span>
+                                <span className="ref-holiday-name">{h.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const yearString = format(selectedDate, 'yyyy');
+
+    return (
+        <div className="ref-calendar-wrapper animate-fade-in">
+            <div className="ref-calendar-top-bar">
+                <h1 className="ref-year-title">
+                    <span className="year-part">{yearString.substring(0, 2)}</span>
+                    <span className="year-part">{yearString.substring(2, 4)}</span>
+                </h1>
+            </div>
+
+            <div className="ref-months-grid">
+                {monthsToRender.map(date => renderMonth(date))}
+            </div>
+        </div>
     );
+};
 
-    const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
-    const hours = Array.from({ length: END_HOUR - START_HOUR }, (_, i) => START_HOUR + i);
+const getEventStyleClass = (event: CalendarEvent) => {
+    if (event.eventType === 'gaming') return 'ref-event-gaming';
+    if (event.eventType === 'hangout') return 'ref-event-hangout';
+    if (event.eventType === 'work') return 'ref-event-work';
+    return `bg-${event.color}`;
+};
 
-    const getEventsForDay = (date: Date) => {
-        return events.filter(event => {
-            const eventDate = new Date(event.startTime);
-            return isSameDay(eventDate, date);
-        });
-    };
+// Component for Weekly View (Granular)
+const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'week' | 'month') => void }> = ({ selectedDate, setViewMode }) => {
+    const { getEventsForWeek } = useCalendar();
+    const startObj = startOfWeek(selectedDate, { weekStartsOn: 0 });
+    const weekDays = Array.from({ length: 7 }, (_, i) => addDays(startObj, i));
+    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const scrollRef = React.useRef<HTMLDivElement>(null);
 
-    const getEventStyle = (event: CalendarEvent) => {
-        const startHour = getHours(new Date(event.startTime));
-        const startMinutes = getMinutes(new Date(event.startTime));
-        const duration = differenceInMinutes(new Date(event.endTime), new Date(event.startTime));
+    // Get events for this week
+    const weekEvents = getEventsForWeek(startObj);
 
-        const topOffset = ((startHour - START_HOUR) * HOUR_HEIGHT) + ((startMinutes / 60) * HOUR_HEIGHT);
-        const height = (duration / 60) * HOUR_HEIGHT;
+    // Auto-scroll to 17:00 (5 PM) on mount
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = 16 * 60; // Scroll to 16:00 to give some headroom
+        }
+    }, []);
 
-        return {
-            top: `${topOffset}px`,
-            height: `${Math.max(height, 30)}px`,
-        };
-    };
-
-    const handlePrevWeek = () => setCurrentWeekStart(subWeeks(currentWeekStart, 1));
-    const handleNextWeek = () => setCurrentWeekStart(addWeeks(currentWeekStart, 1));
-
-    const handleEventClick = (event: CalendarEvent) => {
-        setSelectedEvent(event);
-        setShowEventModal(true);
-    };
-
-    const handleAddEvent = () => {
-        setSelectedEvent(null);
-        setShowEventModal(true);
-    };
-
-    const getParticipantAvatars = (participantIds: string[]) => {
-        return participantIds
-            .map(id => allUsers.find(u => u.id === id))
-            .filter(Boolean)
-            .slice(0, 4);
+    const handleBlockTime = (day: Date, hour: number) => {
+        // Mock Interaction
+        alert(`Requesting to BLOCK ${format(day, 'EEEE')} at ${hour}:00? \n(Feature coming soon!)`);
     };
 
     return (
-        <div className="week-view">
-            <div className="calendar-header">
-                <div className="calendar-title">
-                    <h1>{format(currentWeekStart, 'MMMM yyyy')}</h1>
-                </div>
-
-                <div className="calendar-controls">
-                    <div className="timezone-badge">
-                        GMT +4
-                    </div>
-
-                    <div className="week-navigation">
-                        <button onClick={handlePrevWeek} className="week-nav-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="15,18 9,12 15,6" />
-                            </svg>
-                        </button>
-
-                        {weekDays.slice(0, 7).map((day, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setSelectedDate(day)}
-                                className={`day-tab ${isSameDay(day, selectedDate) ? 'active' : ''
-                                    } ${isSameDay(day, new Date()) ? 'today' : ''
-                                    }`}
-                            >
-                                <span className="day-name">{format(day, 'EEE')}</span>
-                                <span className="day-number">{format(day, 'd')}</span>
-                            </button>
-                        ))}
-
-                        <button onClick={handleNextWeek} className="week-nav-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="9,18 15,12 9,6" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div className="view-mode-toggle">
-                        <button
-                            className={`mode-btn ${viewMode === 'month' ? 'active' : ''}`}
-                            onClick={() => setViewMode('month')}
-                        >
-                            Month
-                        </button>
-                        <button
-                            className={`mode-btn ${viewMode === 'week' ? 'active' : ''}`}
-                            onClick={() => setViewMode('week')}
-                        >
-                            Week
-                        </button>
-                        <button
-                            className={`mode-btn ${viewMode === 'day' ? 'active' : ''}`}
-                            onClick={() => setViewMode('day')}
-                        >
-                            Day
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="calendar-grid-container">
-                <div className="calendar-grid">
-                    {/* Time column */}
-                    <div className="time-column">
-                        {hours.map(hour => (
-                            <div key={hour} className="time-slot" style={{ height: `${HOUR_HEIGHT}px` }}>
-                                <span>{format(new Date().setHours(hour, 0), 'h:mm a').toUpperCase()}</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Day columns */}
-                    {weekDays.map((day, dayIndex) => {
-                        const dayEvents = getEventsForDay(day);
-
-                        return (
-                            <div
-                                key={dayIndex}
-                                className={`day-column ${isSameDay(day, new Date()) ? 'today-column' : ''}`}
-                            >
-                                <div className="day-events-container">
-                                    {dayEvents.map(event => (
-                                        <EventCard
-                                            key={event.id}
-                                            event={event}
-                                            style={getEventStyle(event)}
-                                            participants={getParticipantAvatars(event.participants)}
-                                            onClick={() => handleEventClick(event)}
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Hour grid lines */}
-                                {hours.map(hour => (
-                                    <div
-                                        key={hour}
-                                        className="hour-cell"
-                                        style={{ height: `${HOUR_HEIGHT}px` }}
-                                    ></div>
-                                ))}
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Add Event FAB */}
-                <button className="add-event-fab" onClick={handleAddEvent}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
+        <div className="ref-granular-wrapper animate-fade-in">
+            <div className="ref-granular-header">
+                <button onClick={() => setViewMode('month')} className="ref-back-btn">
+                    &larr; Back to Year
                 </button>
+                <div className="text-center">
+                    <h2 className="text-xl font-bold text-white">{format(startObj, 'MMMM yyyy')}</h2>
+                    <p className="text-sm text-gray-500">
+                        {format(startObj, 'd MMM')} - {format(addDays(startObj, 6), 'd MMM yyyy')}
+                    </p>
+                </div>
+                <div style={{ width: '100px' }}></div> {/* Spacer for center balance */}
             </div>
 
-            {showEventModal && (
-                <EventModal
-                    event={selectedEvent}
-                    onClose={() => setShowEventModal(false)}
-                    participants={selectedEvent ? getParticipantAvatars(selectedEvent.participants) : []}
-                />
-            )}
+            <div className="ref-granular-scroll-container custom-scrollbar" ref={scrollRef}>
+                {/* Header Row (Sticky) */}
+                <div className="ref-granular-grid-header">
+                    <div className="ref-time-header-spacer"></div>
+                    <div className="ref-days-header-track">
+                        {weekDays.map((day, i) => {
+                            const today = isSameDay(day, new Date());
+                            return (
+                                <div key={i} className={`ref-day-col-header ${today ? 'is-today' : ''}`}>
+                                    <span style={{ fontSize: '0.8rem', textTransform: 'uppercase' }}>
+                                        {format(day, 'EEE', { locale: id })}
+                                    </span>
+                                    <span className="ref-day-num-badge">
+                                        {format(day, 'd')}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Body Row (Scrollable Content) */}
+                <div className="ref-granular-grid-body">
+                    {/* Time Labels */}
+                    <div className="ref-time-column">
+                        {hours.map(h => (
+                            <div key={h} className="ref-time-slot-label">
+                                {format(new Date().setHours(h, 0), 'HH:00')}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Day Columns & Grid Lines & Events */}
+                    <div className="ref-days-track">
+                        {weekDays.map((day, i) => {
+                            // Filter events for this specific day
+                            const dayEvents = weekEvents.filter(e => isSameDay(new Date(e.startTime), day));
+                            const isFriday = format(day, 'EEEE') === 'Friday';
+
+                            return (
+                                <div key={i} className="ref-day-column">
+                                    {/* Grid Lines */}
+                                    {hours.map(h => (
+                                        <div
+                                            key={h}
+                                            className="ref-grid-line"
+                                            onClick={() => handleBlockTime(day, h)}
+                                            title="Click to block this time"
+                                        ></div>
+                                    ))}
+
+                                    {/* Mock Perfect Time Overlay (Friday 20:00 - 23:00) */}
+                                    {isFriday && (
+                                        <div
+                                            className="absolute left-1 right-1 rounded-lg border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)] z-10 pointer-events-none flex flex-col items-center justify-center text-center animate-pulse"
+                                            style={{
+                                                top: `${20 * 60}px`,
+                                                height: `${3 * 60}px`,
+                                                background: 'rgba(234, 179, 8, 0.15)'
+                                            }}
+                                        >
+                                            <span className="text-yellow-300 font-bold text-[10px] uppercase tracking-widest bg-black/80 px-2 py-1 rounded mb-1 shadow-lg">
+                                                🔥 PERFECT TIME
+                                            </span>
+                                            <span className="text-white text-[9px] bg-black/50 px-1 rounded">5/5 Squad Ready</span>
+                                        </div>
+                                    )}
+
+                                    {/* Events */}
+                                    {dayEvents.map(event => {
+                                        const start = new Date(event.startTime);
+                                        const end = new Date(event.endTime);
+                                        // Top position: (hours * 60) + minutes
+                                        const top = (start.getHours() * 60) + start.getMinutes();
+                                        // Height: duration in minutes
+                                        const height = differenceInMinutes(end, start);
+                                        // Fallback min height
+                                        const finalHeight = Math.max(height, 20);
+
+                                        return (
+                                            <div
+                                                key={event.id}
+                                                className={`ref-event-card ${getEventStyleClass(event)}`}
+                                                style={{ top: `${top}px`, height: `${finalHeight}px` }}
+                                                title={`${event.title}\n${format(start, 'HH:mm')} - ${format(end, 'HH:mm')}`}
+                                            >
+                                                <span className="ref-event-time">
+                                                    {format(start, 'HH:mm')} - {format(end, 'HH:mm')}
+                                                </span>
+                                                <span className="ref-event-title">{event.title}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
         </div>
     );
+};
+
+export const WeekView: React.FC = () => {
+    const {
+        selectedDate,
+        setSelectedDate,
+        viewMode,
+        setViewMode
+    } = useCalendar();
+
+    const [holidays, setHolidays] = useState<Holiday[]>([]);
+
+    useEffect(() => {
+        setHolidays(getHolidays(getYear(selectedDate)));
+    }, [selectedDate]);
+
+    // We override viewMode logic slightly to default to Year view (component legacy), 
+    // but if context says 'week', we show week.
+    // actually, let's trust the context. If 'month' (default in some contexts), we show Year. 
+    // If 'week' or 'day', we show granular.
+
+    if (viewMode === 'week' || viewMode === 'day') {
+        return <WeeklyTimeGrid selectedDate={selectedDate} setViewMode={setViewMode} />;
+    }
+
+    return <YearGridView selectedDate={selectedDate} holidays={holidays} setSelectedDate={setSelectedDate} setViewMode={setViewMode} />;
 };

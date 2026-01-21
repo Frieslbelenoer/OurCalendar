@@ -2,16 +2,21 @@
 /* Dark theme inspired by the reference design */
 
 :root {
-  /* Colors */
-  --bg-primary: #0f0f1a;
-  --bg-secondary: #1a1a2e;
-  --bg-tertiary: #252542;
-  --bg-card: #1e1e35;
-  --bg-hover: #2a2a4a;
+  /* Colors - Light Mode Switch */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f5;
+  /* Light grey for sidebars/secondary */
+  --bg-tertiary: #e4e4e7;
+  /* SLightly darker grey for inputs/hovers */
+  --bg-card: #ffffff;
+  --bg-hover: #f3f4f6;
 
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
+  --text-primary: #18181b;
+  /* Zinc 900 */
+  --text-secondary: #71717a;
+  /* Zinc 500 */
+  --text-muted: #a1a1aa;
+  /* Zinc 400 */
 
   --accent-purple: #6366f1;
   --accent-purple-light: #818cf8;
@@ -22,24 +27,24 @@
   --accent-pink: #ec4899;
   --accent-teal: #14b8a6;
 
-  --border-color: #2d2d4a;
-  --border-light: #3d3d5c;
+  --border-color: #e4e4e7;
+  --border-light: #d4d4d8;
 
   /* Event Colors */
   --event-green: #22c55e;
-  --event-green-bg: rgba(34, 197, 94, 0.15);
+  --event-green-bg: #dcfce7;
   --event-blue: #3b82f6;
-  --event-blue-bg: rgba(59, 130, 246, 0.15);
+  --event-blue-bg: #dbeafe;
   --event-red: #ef4444;
-  --event-red-bg: rgba(239, 68, 68, 0.15);
+  --event-red-bg: #fee2e2;
   --event-purple: #8b5cf6;
-  --event-purple-bg: rgba(139, 92, 246, 0.15);
+  --event-purple-bg: #f3e8ff;
   --event-orange: #f59e0b;
-  --event-orange-bg: rgba(245, 158, 11, 0.15);
+  --event-orange-bg: #fef3c7;
   --event-pink: #ec4899;
-  --event-pink-bg: rgba(236, 72, 153, 0.15);
+  --event-pink-bg: #fce7f3;
   --event-teal: #14b8a6;
-  --event-teal-bg: rgba(20, 184, 166, 0.15);
+  --event-teal-bg: #ccfbf1;
 
   /* Spacing */
   --spacing-xs: 4px;
@@ -57,10 +62,10 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.2);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -68,7 +73,20 @@
   --transition-slow: 350ms ease;
 
   /* Font */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family: 'Atkinson Hyperlegible', var(--font-backup);
+  --font-backup: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Calendar Specific Reference Colors */
+  --cal-red-block: #F23126;
+  --cal-black-block: #000000;
+  --cal-black-text: #18181b;
+  /* Match text-primary */
+  --cal-grey-text: #d4d4d8;
+  --cal-red-text: #FA2217;
+  --cal-pink-text: #DDB5B5;
+  --cal-blue-text: #1788FA;
+  --cal-cyan-text: #9DCEFF;
+  --cal-purple-text: #D717DB;
 }
 
 * {
@@ -91,6 +109,11 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent giant icons */
+svg {
+  max-width: 100%;
 }
 
 /* Scrollbar Styles */
@@ -341,7 +364,7 @@ a:hover {
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   overflow: hidden;
 }
 
@@ -438,6 +461,22 @@ a:hover {
   flex-direction: column;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.relative {
+  position: relative;
+}
+
 .items-center {
   align-items: center;
 }
@@ -485,7 +524,12 @@ a:hover {
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 /* Loading Screen Styles */
@@ -520,4 +564,33 @@ a:hover {
 .loading-content p {
   color: var(--text-secondary);
   font-size: 0.875rem;
+}
+
+/* Z-Index Utilities */
+.z-10 {
+  z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
+}
+
+.z-30 {
+  z-index: 30;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.z-100 {
+  z-index: 100;
+}
+
+.z-1000 {
+  z-index: 1000;
 }

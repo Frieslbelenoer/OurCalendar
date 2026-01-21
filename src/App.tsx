@@ -5,6 +5,12 @@ import { CalendarProvider } from './context/CalendarContext';
 import { UsersProvider } from './context/UsersContext';
 import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
+import { HomePage } from './pages/HomePage';
+import { TeamPage } from './pages/TeamPage';
+import { ReportsPage } from './pages/ReportsPage';
+import { MessagesPage } from './pages/MessagesPage';
+import { SettingsPage } from './pages/SettingsPage';
+import { Layout } from './components/Layout/Layout';
 import './styles/index.css';
 
 // Protected Route Component
@@ -72,18 +78,28 @@ const AppContent: React.FC = () => {
                     </PublicRoute>
                 }
             />
+
+            {/* Protected Routes */}
             <Route
-                path="/"
                 element={
                     <ProtectedRoute>
                         <UsersProvider>
                             <CalendarProvider>
-                                <Dashboard />
+                                <Layout />
                             </CalendarProvider>
                         </UsersProvider>
                     </ProtectedRoute>
                 }
-            />
+            >
+                <Route path="/" element={<Navigate to="/calendar" replace />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/calendar" element={<Dashboard />} />
+                <Route path="/team" element={<TeamPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/messages" element={<MessagesPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
