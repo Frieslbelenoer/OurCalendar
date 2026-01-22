@@ -106,12 +106,17 @@ const AppContent: React.FC = () => {
 };
 
 // App with Providers
+import { ThemeProvider } from './context/ThemeContext';
+
+// App with Providers
 export const App: React.FC = () => {
     return (
         <Router>
-            <AuthProvider>
-                <AppContent />
-            </AuthProvider>
+            <ThemeProvider>
+                <AuthProvider>
+                    <AppContent />
+                </AuthProvider>
+            </ThemeProvider>
         </Router>
     );
 };

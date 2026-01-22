@@ -21,6 +21,7 @@ import './WeekView.css';
 
 // Component for the Yearly Overview (The "Reference" Style)
 const YearGridView: React.FC<{ selectedDate: Date, holidays: Holiday[], setSelectedDate: (d: Date) => void, setViewMode: (m: 'day' | 'week' | 'month') => void }> = ({ selectedDate, holidays, setSelectedDate, setViewMode }) => {
+    const { openEventModal } = useCalendar();
     const yearStart = startOfYear(selectedDate);
     const monthsToRender = Array.from({ length: 12 }, (_, i) => addMonths(yearStart, i));
 
@@ -113,6 +114,13 @@ const YearGridView: React.FC<{ selectedDate: Date, holidays: Holiday[], setSelec
                     <span className="year-part">{yearString.substring(0, 2)}</span>
                     <span className="year-part">{yearString.substring(2, 4)}</span>
                 </h1>
+                <button
+                    onClick={() => openEventModal()}
+                    className="absolute right-0 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition-colors"
+                    style={{ top: '50%', transform: 'translateY(-50%)' }}
+                >
+                    + Add
+                </button>
             </div>
 
             <div className="ref-months-grid">
@@ -131,7 +139,7 @@ const getEventStyleClass = (event: CalendarEvent) => {
 
 // Component for Weekly View (Granular)
 const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'week' | 'month') => void }> = ({ selectedDate, setViewMode }) => {
-    const { getEventsForWeek } = useCalendar();
+    const { getEventsForWeek, openEventModal } = useCalendar();
     const startObj = startOfWeek(selectedDate, { weekStartsOn: 0 });
     const weekDays = Array.from({ length: 7 }, (_, i) => addDays(startObj, i));
     const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -147,9 +155,9 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
         }
     }, []);
 
-    const handleBlockTime = (day: Date, hour: number) => {
-        // Mock Interaction
-        alert(`Requesting to BLOCK ${format(day, 'EEEE')} at ${hour}:00? \n(Feature coming soon!)`);
+    const handleBlockTime = (_day: Date, _hour: number) => {
+        // Open modal for new event (defaults)
+        openEventModal();
     };
 
     return (
@@ -164,7 +172,14 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
                         {format(startObj, 'd MMM')} - {format(addDays(startObj, 6), 'd MMM yyyy')}
                     </p>
                 </div>
-                <div style={{ width: '100px' }}></div> {/* Spacer for center balance */}
+                <div style={{ width: '100px' }} className="flex justify-end">
+                    <button
+                        onClick={() => openEventModal()}
+                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition-colors"
+                    >
+                        + Add
+                    </button>
+                </div>
             </div>
 
             <div className="ref-granular-scroll-container custom-scrollbar" ref={scrollRef}>

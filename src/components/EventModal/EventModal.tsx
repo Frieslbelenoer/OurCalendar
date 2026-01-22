@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarEvent, User, EventColor } from '../../types';
+import { CalendarEvent, EventColor } from '../../types';
 import { useCalendar } from '../../context/CalendarContext';
 import { useUsers } from '../../context/UsersContext';
 import { format } from 'date-fns';
@@ -8,7 +8,6 @@ import './EventModal.css';
 interface EventModalProps {
     event: CalendarEvent | null;
     onClose: () => void;
-    participants: User[];
 }
 
 const colorOptions: { value: EventColor; label: string }[] = [
@@ -21,7 +20,7 @@ const colorOptions: { value: EventColor; label: string }[] = [
     { value: 'teal', label: 'Teal' },
 ];
 
-export const EventModal: React.FC<EventModalProps> = ({ event, onClose, participants }) => {
+export const EventModal: React.FC<EventModalProps> = ({ event, onClose }) => {
     const { createEvent, updateEvent, deleteEvent } = useCalendar();
     const { allUsers } = useUsers();
     const isEditing = !!event;
@@ -116,12 +115,14 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, particip
                         <label htmlFor="title">Event Title</label>
                         <input
                             id="title"
+                            name="title"
                             type="text"
                             className="input"
                             placeholder="Meeting with the team"
                             value={title}
                             onChange={e => setTitle(e.target.value)}
                             required
+                            autoComplete="off"
                         />
                     </div>
 
@@ -223,7 +224,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, particip
                                     onClick={() => toggleParticipant(user.id)}
                                 >
                                     {user.photoURL ? (
-                                        <img src={user.photoURL} alt={user.displayName} className="avatar avatar-sm" />
+                                        <img src={user.photoURL} alt={user.displayName} className="avatar avatar-sm" width="32" height="32" />
                                     ) : (
                                         <div className="avatar avatar-sm avatar-placeholder">
                                             {user.displayName?.charAt(0)}

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import { db, doc, updateDoc, auth } from '../services/firebase';
+import { useTheme } from '../context/ThemeContext';
 
 export const SettingsPage: React.FC = () => {
     const { user } = useAuth();
     const [displayName, setDisplayName] = useState(user?.displayName || '');
     const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
-    const [darkMode, setDarkMode] = useState(true);
+    const { theme, toggleTheme } = useTheme();
+    const isDark = theme === 'dark';
     const [notifications, setNotifications] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -65,7 +67,7 @@ export const SettingsPage: React.FC = () => {
                                 <div className="relative group">
                                     <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-slate-700/50 bg-slate-800 shadow-2xl transition-all duration-300 group-hover:border-purple-500/50">
                                         {photoURL ? (
-                                            <img src={photoURL} alt="Profile" className="w-full h-full object-cover" />
+                                            <img src={photoURL} alt="Profile" className="w-full h-full object-cover" width="112" height="112" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl font-bold text-white">
                                                 {displayName?.charAt(0) || user?.email?.charAt(0)}
@@ -85,10 +87,11 @@ export const SettingsPage: React.FC = () => {
                                         <label className="text-sm font-medium text-gray-400">Display Name</label>
                                         <input
                                             type="text"
-                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-gray-600"
+                                            className="input"
                                             value={displayName}
                                             onChange={(e) => setDisplayName(e.target.value)}
                                             placeholder="e.g. John Doe"
+                                            autoComplete="name"
                                         />
                                     </div>
 
@@ -122,7 +125,7 @@ export const SettingsPage: React.FC = () => {
 
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-400">Email Address</label>
-                                        <div className="w-full bg-slate-900/30 border border-slate-800 rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed flex items-center justify-between">
+                                        <div className="input flex items-center justify-between opacity-70 cursor-not-allowed bg-opacity-50">
                                             <span>{user?.email}</span>
                                             <svg width="16" height="16" className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                                         </div>
@@ -140,6 +143,7 @@ export const SettingsPage: React.FC = () => {
                                     <button
                                         onClick={handleSave}
                                         disabled={isLoading}
+                                        type="button"
                                         className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-8 py-2.5 rounded-xl font-medium shadow-lg shadow-purple-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                     >
                                         {isLoading && <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
@@ -166,10 +170,14 @@ export const SettingsPage: React.FC = () => {
                                 </div>
                             </div>
                             <button
-                                onClick={() => setDarkMode(!darkMode)}
-                                className={`w-14 h-7 rounded-full p-1 transition-all duration-300 ${darkMode ? 'bg-purple-600 shadow-inner' : 'bg-slate-700'}`}
+                                type="button"
+                                role="switch"
+                                aria-checked={isDark}
+                                aria-label="Toggle Dark Mode"
+                                onClick={toggleTheme}
+                                className="toggle-switch"
                             >
-                                <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${darkMode ? 'translate-x-7' : 'translate-x-0'}`}></div>
+                                <div className="toggle-switch-handle"></div>
                             </button>
                         </div>
 
@@ -184,10 +192,14 @@ export const SettingsPage: React.FC = () => {
                                 </div>
                             </div>
                             <button
+                                type="button"
+                                role="switch"
+                                aria-checked={notifications}
+                                aria-label="Toggle Notifications"
                                 onClick={() => setNotifications(!notifications)}
-                                className={`w-14 h-7 rounded-full p-1 transition-all duration-300 ${notifications ? 'bg-purple-600 shadow-inner' : 'bg-slate-700'}`}
+                                className="toggle-switch"
                             >
-                                <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${notifications ? 'translate-x-7' : 'translate-x-0'}`}></div>
+                                <div className="toggle-switch-handle"></div>
                             </button>
                         </div>
                     </div>

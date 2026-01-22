@@ -9,7 +9,7 @@ import './Sidebar.css';
 export const Sidebar: React.FC = () => {
     const { user } = useAuth();
     const { allUsers, onlineUsers } = useUsers();
-    const { events, selectedDate, filterMyEvents, setFilterMyEvents } = useCalendar();
+    const { events, selectedDate, filterMyEvents, setFilterMyEvents, openEventModal } = useCalendar();
     const [showAllUsers, setShowAllUsers] = useState(false);
 
     // Get events for the selected month
@@ -32,6 +32,16 @@ export const Sidebar: React.FC = () => {
 
     return (
         <aside className="sidebar">
+            <div className="p-4 pb-0">
+                <button
+                    type="button"
+                    onClick={() => openEventModal()}
+                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
+                >
+                    <span className="text-xl">+</span> Add Schedule
+                </button>
+            </div>
+
             {/* Mini Calendar */}
             <div className="sidebar-section">
                 <MiniCalendar />
@@ -41,7 +51,7 @@ export const Sidebar: React.FC = () => {
             <div className="sidebar-section">
                 <div className="section-header">
                     <h3>What will happen this Month?</h3>
-                    <button className="view-all-btn">View all</button>
+                    <button type="button" className="view-all-btn">View all</button>
                 </div>
                 <div className="events-list">
                     {monthEvents.length > 0 ? (
@@ -66,7 +76,7 @@ export const Sidebar: React.FC = () => {
             <div className="sidebar-section">
                 <div className="section-header">
                     <h3>Time breakdown</h3>
-                    <button className="view-all-btn">View all</button>
+                    <button type="button" className="view-all-btn">View all</button>
                 </div>
                 <div className="time-breakdown">
                     {timeBreakdown.map((item, index) => (
@@ -102,7 +112,7 @@ export const Sidebar: React.FC = () => {
                         >
                             <div className="member-avatar-wrapper">
                                 {member.photoURL ? (
-                                    <img src={member.photoURL} alt={member.displayName} className="avatar avatar-sm" />
+                                    <img src={member.photoURL} alt={member.displayName} className="avatar avatar-sm" width="32" height="32" />
                                 ) : (
                                     <div className="avatar avatar-sm avatar-placeholder">
                                         {member.displayName?.charAt(0) || '?'}
@@ -122,6 +132,7 @@ export const Sidebar: React.FC = () => {
                 </div>
                 {allUsers.length > 6 && (
                     <button
+                        type="button"
                         className="show-more-btn"
                         onClick={() => setShowAllUsers(!showAllUsers)}
                     >

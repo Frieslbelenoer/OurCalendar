@@ -100,7 +100,7 @@ export const ReportsPage: React.FC = () => {
                             {/* 2nd Place */}
                             <div className="flex flex-col items-center">
                                 <div className="w-16 h-16 rounded-full border-4 border-gray-400 overflow-hidden mb-2 relative">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Andi`} alt="Andi" />
+                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Andi`} alt="Andi" width="64" height="64" />
                                     <div className="absolute -bottom-1 -right-1 bg-gray-400 text-slate-900 text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">2</div>
                                 </div>
                                 <div className="w-20 bg-slate-700/50 rounded-t-lg h-24 flex items-end justify-center pb-2 border-t-4 border-gray-400">
@@ -112,7 +112,7 @@ export const ReportsPage: React.FC = () => {
                             <div className="flex flex-col items-center z-10">
                                 <span className="text-2xl mb-1">👑</span>
                                 <div className="w-20 h-20 rounded-full border-4 border-yellow-400 overflow-hidden mb-2 relative shadow-[0_0_20px_rgba(250,204,21,0.5)]">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Budi`} alt="Budi" />
+                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Budi`} alt="Budi" width="80" height="80" />
                                     <div className="absolute -bottom-1 -right-1 bg-yellow-400 text-slate-900 text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">1</div>
                                 </div>
                                 <div className="w-24 bg-slate-700/80 rounded-t-lg h-32 flex items-end justify-center pb-2 border-t-4 border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]">
@@ -123,7 +123,7 @@ export const ReportsPage: React.FC = () => {
                             {/* 3rd Place */}
                             <div className="flex flex-col items-center">
                                 <div className="w-16 h-16 rounded-full border-4 border-orange-700 overflow-hidden mb-2 relative">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Caca`} alt="Caca" />
+                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Caca`} alt="Caca" width="64" height="64" />
                                     <div className="absolute -bottom-1 -right-1 bg-orange-700 text-slate-900 text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">3</div>
                                 </div>
                                 <div className="w-20 bg-slate-700/50 rounded-t-lg h-16 flex items-end justify-center pb-2 border-t-4 border-orange-700">
@@ -146,7 +146,7 @@ export const ReportsPage: React.FC = () => {
                                     <h4 className="font-bold text-white">Si Paling Sibuk</h4>
                                     <p className="text-xs text-red-300">Jarang mabar 2 minggu ini.</p>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Doni`} className="w-6 h-6 rounded-full" />
+                                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Doni`} className="w-6 h-6 rounded-full" alt="Doni" width="24" height="24" />
                                         <span className="text-sm font-medium text-gray-300">Doni</span>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@ export const ReportsPage: React.FC = () => {
                                     <h4 className="font-bold text-white">Ghosting Master</h4>
                                     <p className="text-xs text-red-300">Janji main tapi ketiduran.</p>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Eko`} className="w-6 h-6 rounded-full" />
+                                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Eko`} className="w-6 h-6 rounded-full" alt="Eko" width="24" height="24" />
                                         <span className="text-sm font-medium text-gray-300">Eko</span>
                                     </div>
                                 </div>

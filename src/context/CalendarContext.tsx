@@ -7,7 +7,7 @@ import {
     orderBy,
 } from '../services/firebase';
 import { collections, getRefs } from '../services/firestore';
-import { CalendarEvent, EventColor } from '../types';
+import { CalendarEvent } from '../types';
 import { useAuth } from './AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,6 +25,10 @@ interface CalendarContextType {
     deleteEvent: (id: string) => Promise<void>;
     getEventsForDate: (date: Date) => CalendarEvent[];
     getEventsForWeek: (startDate: Date) => CalendarEvent[];
+    isEventModalOpen: boolean;
+    editingEvent: CalendarEvent | null;
+    openEventModal: (event?: CalendarEvent | null) => void;
+    closeEventModal: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | null>(null);
@@ -42,6 +46,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+    const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
 
     useEffect(() => {
         if (!user) {
@@ -141,7 +147,17 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updateEvent,
         deleteEvent,
         getEventsForDate,
-        getEventsForWeek
+        getEventsForWeek,
+        isEventModalOpen,
+        editingEvent,
+        openEventModal: (event?: CalendarEvent | null) => {
+            setEditingEvent(event || null);
+            setIsEventModalOpen(true);
+        },
+        closeEventModal: () => {
+            setEditingEvent(null);
+            setIsEventModalOpen(false);
+        }
     };
 
     return (

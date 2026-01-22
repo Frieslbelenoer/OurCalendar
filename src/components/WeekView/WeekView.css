@@ -132,7 +132,7 @@
 }
 
 .ref-day-cell:hover {
-    background: #f0f0f0;
+    background: var(--bg-hover);
 }
 
 .ref-day-cell.is-today {
@@ -308,7 +308,7 @@
 }
 
 .ref-day-cell:hover {
-    background: #f0f0f0;
+    background: var(--bg-hover);
 }
 
 .ref-day-cell.is-today {
@@ -783,7 +783,7 @@
     overflow-y: auto;
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    background: #ffffff;
+    background: var(--bg-card);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -794,7 +794,8 @@
     border-bottom: 1px solid #e2e8f0;
     position: sticky;
     top: 0;
-    background: #f8fafc;
+    top: 0;
+    background: var(--bg-secondary);
     /* Slate 50 */
     z-index: 10;
 }

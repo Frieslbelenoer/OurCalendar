@@ -50,75 +50,59 @@ export const HomePage: React.FC = () => {
                 </div>
 
                 {/* 2. Top Grid: Hero | Feed | Chat */}
+                {/* 2. The Marv Crew (Profiles) - Full Width Horizontal */}
+                <div className="flex flex-col gap-8 py-8 mb-8 relative">
+
+                    <div className="flex flex-wrap items-start justify-center gap-6 px-4">
+                        {allUsers.map((crewMember, index) => {
+                            const styles = [
+                                { bg: 'from-cyan-400 to-teal-500', shadow: 'rgba(34,211,238,0.4)', text: 'text-teal-400', role: 'TECH LEADER' },
+                                { bg: 'from-purple-500 to-indigo-600', shadow: 'rgba(167,139,250,0.3)', text: 'text-indigo-400', role: 'FRONTEND DEV' },
+                                { bg: 'from-pink-500 to-rose-600', shadow: 'rgba(251,113,133,0.3)', text: 'text-rose-400', role: 'UI DESIGNER' },
+                                { bg: 'from-amber-400 to-orange-500', shadow: 'rgba(251,191,36,0.3)', text: 'text-amber-400', role: 'BACKEND WIZ' },
+                                { bg: 'from-emerald-400 to-green-500', shadow: 'rgba(52,211,153,0.3)', text: 'text-emerald-400', role: 'SQUAD MEMBER' },
+                            ];
+                            const style = styles[index % styles.length];
+
+                            return (
+                                <div key={crewMember.id} className="flex flex-col items-center group cursor-pointer w-32 md:w-36 transition-transform hover:-translate-y-1 duration-300">
+                                    <div className={`relative w-24 h-24 rounded-full p-1 bg-gradient-to-b ${style.bg} shadow-[0_0_20px_${style.shadow}] mb-3 group-hover:scale-105 transition-transform`}>
+                                        <img
+                                            src={crewMember.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${crewMember.displayName}`}
+                                            className="w-full h-full rounded-full bg-slate-900 object-cover border-4 border-slate-900"
+                                            alt={crewMember.displayName}
+                                        />
+                                        {crewMember.isOnline && (
+                                            <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-slate-900 rounded-full animate-pulse"></div>
+                                        )}
+                                    </div>
+                                    <h3 className="text-sm font-bold text-white tracking-tight text-center leading-tight min-h-[2.5rem] line-clamp-2 flex items-center justify-center w-full px-1">
+                                        {crewMember.displayName}
+                                    </h3>
+                                    <p className={`text-[9px] font-bold ${style.text} tracking-[0.15em] uppercase mt-1 text-center whitespace-nowrap`}>AS A {style.role}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* 3. Middle Grid: Feed | Chat */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                    {/* Col 1: Hero (User Status) - Span 3 */}
-                    <div className="lg:col-span-3 card bg-slate-800/60 backdrop-blur border border-slate-700/50 p-6 rounded-2xl flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden group h-full min-h-[300px]">
-                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="relative mb-4 shrink-0">
-                            <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[0_0_20px_rgba(139,92,246,0.3)] mx-auto overflow-hidden">
-                                <img
-                                    src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.displayName}`}
-                                    className="w-full h-full rounded-full bg-slate-900 object-cover"
-                                    alt="User"
-                                    style={{ minWidth: '100%', minHeight: '100%' }}
-                                />
-                            </div>
-                            <div className="absolute bottom-1 right-1/2 translate-x-10 w-6 h-6 bg-green-500 border-4 border-slate-800 rounded-full dark:border-slate-900"></div>
-                        </div>
-
-                        <h2 className="text-xl font-bold text-white mb-1 truncate w-full">{user?.displayName}</h2>
-                        <div className="flex items-center justify-center gap-2 mb-6">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                            <span className="text-sm text-emerald-400 font-medium tracking-wide whitespace-nowrap">ONLINE & READY</span>
-                        </div>
-
-                        <div className="w-full grid grid-cols-2 gap-2 mt-auto">
-                            <button className="bg-slate-700/50 hover:bg-slate-700 text-xs py-2 rounded-lg text-gray-300 transition-colors">Edit Profile</button>
-                            <button className="bg-slate-700/50 hover:bg-slate-700 text-xs py-2 rounded-lg text-gray-300 transition-colors">Settings</button>
-                        </div>
-                    </div>
-
-                    {/* Col 2: Live Feed - Span 5 */}
-                    <div className="lg:col-span-5 card bg-slate-800/40 backdrop-blur border border-slate-700/50 p-6 rounded-2xl shadow-lg flex flex-col overflow-hidden h-full min-h-[300px]">
+                    {/* Col 1: Live Feed - Span 7 */}
+                    <div className="lg:col-span-7 card bg-slate-800/40 backdrop-blur border border-slate-700/50 p-6 rounded-2xl shadow-lg flex flex-col overflow-hidden h-full min-h-[300px]">
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2 shrink-0">
                             <span className="w-2 h-2 bg-blue-500 rounded-full"></span> Squad Activity
                         </h3>
-                        <div className="space-y-4 overflow-y-auto custom-scrollbar flex-1 pr-2">
-                            {/* Mock Feed Items */}
-                            <div className="flex gap-3 items-start p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors w-full">
-                                <div className="shrink-0 w-8 h-8 rounded-full bg-slate-700 overflow-hidden">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Budi`} className="w-full h-full object-cover" alt="Budi" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-200 truncate"><span className="font-bold text-white">Budi</span> is now <span className="text-green-400 font-bold">Online</span></p>
-                                    <p className="text-xs text-gray-500 mt-0.5">2 mins ago</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-3 items-start p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors w-full">
-                                <div className="shrink-0 w-8 h-8 rounded-full bg-slate-700 overflow-hidden">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah`} className="w-full h-full object-cover" alt="Sarah" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-200 truncate"><span className="font-bold text-white">Sarah</span> reached <span className="text-yellow-400 font-bold">Gold III</span></p>
-                                    <p className="text-xs text-gray-500 mt-0.5">15 mins ago</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-3 items-start p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors w-full">
-                                <div className="shrink-0 w-8 h-8 rounded-full bg-slate-700 overflow-hidden">
-                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Eko`} className="w-full h-full object-cover" alt="Eko" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-200 truncate"><span className="font-bold text-white">Eko</span> is "Busy working"</p>
-                                    <p className="text-xs text-gray-500 mt-0.5">1 hour ago</p>
-                                </div>
+                        <div className="space-y-4 overflow-y-auto custom-scrollbar flex-1 pr-2 flex items-center justify-center">
+                            <div className="text-center text-gray-500 py-12">
+                                <p className="text-sm">No recent activity</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Col 3: Lobby Chat - Span 4 */}
-                    <div className="lg:col-span-4 card bg-slate-800/40 backdrop-blur border border-slate-700/50 p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden h-full min-h-[300px]">
+                    {/* Col 2: Lobby Chat - Span 5 */}
+                    <div className="lg:col-span-5 card bg-slate-800/40 backdrop-blur border border-slate-700/50 p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden h-full min-h-[300px]">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                         <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2 relative z-10 shrink-0">
                             <span className="text-lg">💬</span> Lobby Chat
@@ -161,18 +145,18 @@ export const HomePage: React.FC = () => {
                                 <p className="text-purple-300 text-lg font-medium mb-6">Friday Night Valorant</p>
                                 <div className="flex gap-4">
                                     <div className="bg-black/50 backdrop-blur border border-white/10 px-4 py-2 rounded-lg text-center min-w-[80px]">
-                                        <span className="block text-2xl font-bold text-white font-mono">{String(timeLeft.hours).padStart(2, '0')}</span>
+                                        <span className="block text-2xl font-bold text-white font-mono tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</span>
                                         <span className="text-[10px] text-gray-400 uppercase">Hours</span>
                                     </div>
                                     <div className="bg-black/50 backdrop-blur border border-white/10 px-4 py-2 rounded-lg text-center min-w-[80px]">
-                                        <span className="block text-2xl font-bold text-white font-mono">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                                        <span className="block text-2xl font-bold text-white font-mono tabular-nums">{String(timeLeft.minutes).padStart(2, '0')}</span>
                                         <span className="text-[10px] text-gray-400 uppercase">Mins</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex-shrink-0">
-                                <button className="px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-[0_0_30px_rgba(147,51,234,0.5)] transition-all hover:scale-105 active:scale-95 border border-purple-400">
+                                <button type="button" className="px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-[0_0_30px_rgba(147,51,234,0.5)] transition-all hover:scale-105 active:scale-95 border border-purple-400">
                                     JOIN LOBBY
                                 </button>
                             </div>
@@ -182,6 +166,7 @@ export const HomePage: React.FC = () => {
                     {/* Quick Action (Span 4) */}
                     <div className="lg:col-span-4 h-full">
                         <button
+                            type="button"
                             onClick={handleImFree}
                             className="w-full h-full min-h-[180px] rounded-2xl bg-gradient-to-br from-lime-400 to-green-500 hover:from-lime-300 hover:to-green-400 border-4 border-green-300/30 shadow-[0_0_40px_rgba(74,222,128,0.3)] flex flex-col items-center justify-center gap-2 group transition-all transform hover:-translate-y-1 active:scale-95 relative overflow-hidden"
                         >
