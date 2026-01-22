@@ -983,38 +983,51 @@
 }
 
 /* Legacy Color Fallbacks */
+/* Vibrant Event Colors with High Contrast */
 .bg-green {
-    background: rgba(34, 197, 94, 0.15);
-    border-left: 3px solid #22c55e;
-    color: #14532d;
+    background: var(--event-green);
+    border-left: 4px solid #14532d;
+    color: white;
 }
 
 .bg-blue {
-    background: rgba(59, 130, 246, 0.15);
-    border-left: 3px solid #3b82f6;
-    color: #1e3a8a;
+    background: var(--event-blue);
+    border-left: 4px solid #1e3a8a;
+    color: white;
 }
 
 .bg-red {
-    background: rgba(239, 68, 68, 0.15);
-    border-left: 3px solid #ef4444;
-    color: #7f1d1d;
+    background: var(--event-red);
+    border-left: 4px solid #7f1d1d;
+    color: white;
+}
+
+.bg-purple {
+    background: var(--event-purple);
+    border-left: 4px solid #581c87;
+    color: white;
+}
+
+.bg-orange {
+    background: var(--event-orange);
+    border-left: 4px solid #7c2d12;
+    color: white;
 }
 
 .bg-pink {
-    background: rgba(236, 72, 153, 0.15);
-    border-left: 3px solid #ec4899;
-    color: #831843;
+    background: var(--event-pink);
+    border-left: 4px solid #831843;
+    color: white;
 }
 
 .bg-teal {
-    background: rgba(20, 184, 166, 0.15);
-    border-left: 3px solid #14b8a6;
-    color: #134e4a;
+    background: var(--event-teal);
+    border-left: 4px solid #134e4a;
+    color: white;
 }
 
 .bg-gray {
-    background: rgba(107, 114, 128, 0.15);
-    border-left: 3px solid #6b7280;
-    color: #1f2937;
+    background: #6b7280;
+    border-left: 4px solid #1f2937;
+    color: white;
 }

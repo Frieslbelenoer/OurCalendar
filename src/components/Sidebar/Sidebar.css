@@ -1,13 +1,69 @@
 .sidebar {
-    width: 280px;
-    min-width: 280px;
+    position: relative;
     background: var(--bg-secondary);
     border-right: 1px solid var(--border-color);
-    padding: var(--spacing-lg);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    will-change: width;
+}
+
+.sidebar.open {
+    width: 280px;
+}
+
+.sidebar.closed {
+    width: 0;
+    border-right: none;
+}
+
+.sidebar-content-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sidebar-inner {
+    width: 280px;
+    height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--spacing-lg);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
+}
+
+.sidebar-toggle-btn {
+    position: absolute;
+    top: 24px;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    z-index: 20;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-toggle-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+    border-color: var(--accent-purple);
+}
+
+.sidebar.closed .sidebar-toggle-btn {
+    right: -24px;
+    /* Move slightly more out when closed to be easily clickable */
+    background: var(--bg-card);
+    /* Ensure it's visible against main content */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-section {

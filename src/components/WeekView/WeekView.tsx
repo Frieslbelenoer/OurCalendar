@@ -1,134 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useCalendar } from '../../context/CalendarContext';
-import { getHolidays, Holiday } from '../../services/holidays';
-import { CalendarEvent } from '../../types';
 import {
-    format,
-    startOfMonth,
-    endOfMonth,
-    startOfWeek,
-    endOfWeek,
-    startOfYear,
-    addDays,
-    addMonths,
-    isSameMonth,
-    isSameDay,
-    getYear,
-    differenceInMinutes
+    format, startOfWeek, addDays, isSameDay, differenceInMinutes
 } from 'date-fns';
 import { id } from 'date-fns/locale';
+import { CalendarYearView } from '../Calendar/CalendarYearView';
+import { CalendarEvent } from '../../types';
 import './WeekView.css';
 
 // Component for the Yearly Overview (The "Reference" Style)
-const YearGridView: React.FC<{ selectedDate: Date, holidays: Holiday[], setSelectedDate: (d: Date) => void, setViewMode: (m: 'day' | 'week' | 'month') => void }> = ({ selectedDate, holidays, setSelectedDate, setViewMode }) => {
-    const { openEventModal } = useCalendar();
-    const yearStart = startOfYear(selectedDate);
-    const monthsToRender = Array.from({ length: 12 }, (_, i) => addMonths(yearStart, i));
 
-    const renderMonth = (baseDate: Date) => {
-        const monthStart = startOfMonth(baseDate);
-        const monthEnd = endOfMonth(monthStart);
-        const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
-        const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
-
-        const rows = [];
-        let days = [];
-        let day = startDate;
-        const monthName = format(monthStart, 'MMMM', { locale: id });
-
-        while (day <= endDate) {
-            for (let i = 0; i < 7; i++) {
-                days.push(day);
-                day = addDays(day, 1);
-            }
-            rows.push(days);
-            days = [];
-        }
-
-        return (
-            <div className="ref-month-wrapper" key={monthStart.toString()}>
-                <div className="ref-month-container">
-                    <div className="ref-month-header">
-                        <span className="ref-month-name">{monthName}</span>
-                    </div>
-                    <div className="ref-days-header">
-                        <div className="ref-header-spacer"></div>
-                        {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d, i) => (
-                            <div key={d} className={`ref-header-cell ${i === 0 ? 'text-red' : ''}`}>
-                                {d}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="ref-days-grid">
-                        {rows.map((week, wIndex) => (
-                            <div key={wIndex} className="ref-week-row">
-                                <div className="ref-week-num">{format(week[0], 'w')}</div>
-                                {week.map((d, dIndex) => {
-                                    const isSunday = dIndex === 0;
-                                    const isHoliday = holidays.find(h => isSameDay(h.start, d));
-                                    const isCurrentMonth = isSameMonth(d, monthStart);
-                                    const isToday = isSameDay(d, new Date());
-
-                                    let className = 'ref-day-cell ';
-                                    if (!isCurrentMonth) className += 'text-grey ';
-                                    else if (isSunday || isHoliday) className += 'text-red ';
-                                    else className += 'text-cal-primary ';
-                                    if (isToday) className += 'is-today ';
-
-                                    return (
-                                        <div
-                                            key={dIndex}
-                                            className={className}
-                                            onClick={() => {
-                                                setSelectedDate(d);
-                                                setViewMode('week'); // Switch to Week View on click for granularity
-                                            }}
-                                        >
-                                            <span className="day-value">{format(d, 'd')}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="ref-month-holidays">
-                        {holidays.filter(h => isSameMonth(h.start, monthStart)).map((h, i) => (
-                            <div key={i} className="ref-month-holiday-item">
-                                <span className="ref-holiday-date">{format(h.start, 'd', { locale: id })}</span>
-                                <span className="ref-holiday-name">{h.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    const yearString = format(selectedDate, 'yyyy');
-
-    return (
-        <div className="ref-calendar-wrapper animate-fade-in">
-            <div className="ref-calendar-top-bar">
-                <h1 className="ref-year-title">
-                    <span className="year-part">{yearString.substring(0, 2)}</span>
-                    <span className="year-part">{yearString.substring(2, 4)}</span>
-                </h1>
-                <button
-                    onClick={() => openEventModal()}
-                    className="absolute right-0 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition-colors"
-                    style={{ top: '50%', transform: 'translateY(-50%)' }}
-                >
-                    + Add
-                </button>
-            </div>
-
-            <div className="ref-months-grid">
-                {monthsToRender.map(date => renderMonth(date))}
-            </div>
-        </div>
-    );
-};
 
 const getEventStyleClass = (event: CalendarEvent) => {
     if (event.eventType === 'gaming') return 'ref-event-gaming';
@@ -164,7 +45,7 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
         <div className="ref-granular-wrapper animate-fade-in">
             <div className="ref-granular-header">
                 <button onClick={() => setViewMode('month')} className="ref-back-btn">
-                    &larr; Back to Year
+                    &larr; Kembali ke Tahunan
                 </button>
                 <div className="text-center">
                     <h2 className="text-xl font-bold text-white">{format(startObj, 'MMMM yyyy')}</h2>
@@ -177,7 +58,7 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
                         onClick={() => openEventModal()}
                         className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-2 px-3 rounded-lg shadow transition-colors"
                     >
-                        + Add
+                        + Tambah
                     </button>
                 </div>
             </div>
@@ -229,7 +110,7 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
                                             key={h}
                                             className="ref-grid-line"
                                             onClick={() => handleBlockTime(day, h)}
-                                            title="Click to block this time"
+                                            title="Klik buat booking jam ini"
                                         ></div>
                                     ))}
 
@@ -244,9 +125,9 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
                                             }}
                                         >
                                             <span className="text-yellow-300 font-bold text-[10px] uppercase tracking-widest bg-black/80 px-2 py-1 rounded mb-1 shadow-lg">
-                                                🔥 PERFECT TIME
+                                                🔥 WAKTU MABAR SEMPURNA
                                             </span>
-                                            <span className="text-white text-[9px] bg-black/50 px-1 rounded">5/5 Squad Ready</span>
+                                            <span className="text-white text-[9px] bg-black/50 px-1 rounded">5/5 Squad Siap</span>
                                         </div>
                                     )}
 
@@ -267,6 +148,10 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
                                                 className={`ref-event-card ${getEventStyleClass(event)}`}
                                                 style={{ top: `${top}px`, height: `${finalHeight}px` }}
                                                 title={`${event.title}\n${format(start, 'HH:mm')} - ${format(end, 'HH:mm')}`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openEventModal(event);
+                                                }}
                                             >
                                                 <span className="ref-event-time">
                                                     {format(start, 'HH:mm')} - {format(end, 'HH:mm')}
@@ -288,25 +173,18 @@ const WeeklyTimeGrid: React.FC<{ selectedDate: Date, setViewMode: (m: 'day' | 'w
 export const WeekView: React.FC = () => {
     const {
         selectedDate,
-        setSelectedDate,
         viewMode,
         setViewMode
     } = useCalendar();
 
-    const [holidays, setHolidays] = useState<Holiday[]>([]);
-
-    useEffect(() => {
-        setHolidays(getHolidays(getYear(selectedDate)));
-    }, [selectedDate]);
-
     // We override viewMode logic slightly to default to Year view (component legacy), 
     // but if context says 'week', we show week.
-    // actually, let's trust the context. If 'month' (default in some contexts), we show Year. 
-    // If 'week' or 'day', we show granular.
+    // If 'month' or 'year', we show the new CalendarYearView.
 
     if (viewMode === 'week' || viewMode === 'day') {
         return <WeeklyTimeGrid selectedDate={selectedDate} setViewMode={setViewMode} />;
     }
 
-    return <YearGridView selectedDate={selectedDate} holidays={holidays} setSelectedDate={setSelectedDate} setViewMode={setViewMode} />;
+    // Use the new CalendarYearView for month/year modes
+    return <CalendarYearView />;
 };

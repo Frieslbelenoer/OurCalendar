@@ -91,7 +91,7 @@ const AppContent: React.FC = () => {
                     </ProtectedRoute>
                 }
             >
-                <Route path="/" element={<Navigate to="/calendar" replace />} />
+                <Route path="/" element={<Navigate to="/home" replace />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/calendar" element={<Dashboard />} />
                 <Route path="/team" element={<TeamPage />} />

@@ -17,9 +17,9 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
 
     // Mock notifications
     const notifications = [
-        { id: 1, text: "Kamisato Nil added 'Team Meeting'", time: "2 min ago", type: "add" },
-        { id: 2, text: "Project Review was updated", time: "1 hour ago", type: "update" },
-        { id: 3, text: "New comment on 'Design Sprint'", time: "3 hours ago", type: "comment" }
+        { id: 1, text: "Kamisato Nil nambahin 'Mabar Valorant'", time: "2 min lalu", type: "add" },
+        { id: 2, text: "Jadwal Review Projek diupdate", time: "1 jam lalu", type: "update" },
+        { id: 3, text: "Ada komen baru di 'Design Sprint'", time: "3 jam lalu", type: "comment" }
     ];
 
     // Close notifications when clicking outside
@@ -52,18 +52,18 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
                         <circle cx="16" cy="17" r="1.5" fill="#3B82F6" />
                         <circle cx="20" cy="17" r="1.5" fill="#EF4444" />
                     </svg>
-                    <span className="logo-text">OurCalendar</span>
+                    <span className="logo-text">Basecamp Kita</span>
                 </div>
             </div>
 
             <nav className="header-nav">
-                <NavLink to="/home" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/home" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Basecamp">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                         <polyline points="9,22 9,12 15,12 15,22" />
                     </svg>
                 </NavLink>
-                <NavLink to="/calendar" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/calendar" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Jadwal Mabar">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                         <line x1="16" y1="2" x2="16" y2="6" />
@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
                         <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                 </NavLink>
-                <NavLink to="/team" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/team" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Circle">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                         <circle cx="9" cy="7" r="4" />
@@ -79,19 +79,19 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                 </NavLink>
-                <NavLink to="/reports" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/reports" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Laporan">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="18" y1="20" x2="18" y2="10" />
                         <line x1="12" y1="20" x2="12" y2="4" />
                         <line x1="6" y1="20" x2="6" y2="14" />
                     </svg>
                 </NavLink>
-                <NavLink to="/messages" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/messages" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Chat">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                     </svg>
                 </NavLink>
-                <NavLink to="/settings" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}>
+                <NavLink to="/settings" className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`} aria-label="Pengaturan">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="12" cy="12" r="3" />
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -121,8 +121,8 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
                     {showNotifications && (
                         <div className="notification-popup animate-fade-in">
                             <div className="notification-header">
-                                <h3>Notifications</h3>
-                                <button className="mark-read-btn">Mark all read</button>
+                                <h3>Notifikasi</h3>
+                                <button className="mark-read-btn">Udah Baca Semua</button>
                             </div>
                             <div className="notification-list">
                                 {notifications.map(notif => (
@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({ currentMonth }) => {
                 <button
                     className="nav-btn theme-toggle-btn"
                     onClick={toggleTheme}
-                    aria-label="Toggle theme"
+                    aria-label="Ganti tema"
                 >
                     {theme === 'dark' ? (
                         <svg key="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="theme-icon">

@@ -5,10 +5,13 @@ import {
     FirestoreDataConverter,
     QueryDocumentSnapshot,
     SnapshotOptions,
-    DocumentData
+    DocumentData,
+    WithFieldValue,
+    PartialWithFieldValue,
+    SetOptions
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { User, CalendarEvent } from '../types';
+import { User, CalendarEvent, Group, ActivityLog } from '../types';
 
 // Generic helper for Date <-> Timestamp conversion
 const dateToTimestamp = (date: Date | null | undefined): Timestamp | null => {
@@ -22,14 +25,12 @@ const timestampToDate = (timestamp: any): Date | null => {
 };
 
 export const userConverter: FirestoreDataConverter<User> = {
-    toFirestore(user: User): DocumentData {
-        return {
-            ...user,
-            lastSeen: dateToTimestamp(user.lastSeen),
-            // If createdAt is missing, use server time or current time. 
-            // Ideally should be set once.
-            createdAt: user.createdAt ? dateToTimestamp(user.createdAt) : Timestamp.now(),
-        };
+    toFirestore(modelObject: WithFieldValue<User> | PartialWithFieldValue<User>, _options?: SetOptions): DocumentData {
+        const user = modelObject as Partial<User>;
+        const data = { ...user } as DocumentData;
+        if (user.lastSeen instanceof Date) data.lastSeen = dateToTimestamp(user.lastSeen);
+        if (user.createdAt instanceof Date) data.createdAt = dateToTimestamp(user.createdAt);
+        return data;
     },
     fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): User {
         const data = snapshot.data(options);
@@ -43,13 +44,12 @@ export const userConverter: FirestoreDataConverter<User> = {
 };
 
 export const eventConverter: FirestoreDataConverter<CalendarEvent> = {
-    toFirestore(event: CalendarEvent): DocumentData {
-        return {
-            ...event,
-            // Ensure dates are converted to Timestamps for storage
-            startTime: dateToTimestamp(event.startTime),
-            endTime: dateToTimestamp(event.endTime),
-        };
+    toFirestore(modelObject: WithFieldValue<CalendarEvent> | PartialWithFieldValue<CalendarEvent>, _options?: SetOptions): DocumentData {
+        const event = modelObject as Partial<CalendarEvent>;
+        const data = { ...event } as DocumentData;
+        if (event.startTime instanceof Date) data.startTime = dateToTimestamp(event.startTime);
+        if (event.endTime instanceof Date) data.endTime = dateToTimestamp(event.endTime);
+        return data;
     },
     fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): CalendarEvent {
         const data = snapshot.data(options);
@@ -63,11 +63,47 @@ export const eventConverter: FirestoreDataConverter<CalendarEvent> = {
     }
 };
 
+export const groupConverter: FirestoreDataConverter<Group> = {
+    toFirestore(group: Group): DocumentData {
+        return {
+            ...group,
+            createdAt: dateToTimestamp(group.createdAt),
+        };
+    },
+    fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Group {
+        const data = snapshot.data(options);
+        return {
+            ...data,
+            id: snapshot.id,
+            createdAt: timestampToDate(data.createdAt) || new Date(),
+        } as Group;
+    }
+};
+
+export const activityConverter: FirestoreDataConverter<ActivityLog> = {
+    toFirestore(log: ActivityLog): DocumentData {
+        return {
+            ...log,
+            timestamp: dateToTimestamp(log.timestamp),
+        };
+    },
+    fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): ActivityLog {
+        const data = snapshot.data(options);
+        return {
+            ...data,
+            id: snapshot.id,
+            timestamp: timestampToDate(data.timestamp) || new Date(),
+        } as ActivityLog;
+    }
+};
+
 // Typed Collections
 // Use these instead of raw collection() calls
 export const collections = {
     users: collection(db, 'users').withConverter(userConverter),
     events: collection(db, 'events').withConverter(eventConverter),
+    groups: collection(db, 'groups').withConverter(groupConverter),
+    activities: collection(db, 'activities').withConverter(activityConverter),
 };
 
 // Typed Document References
@@ -75,4 +111,6 @@ export const collections = {
 export const getRefs = {
     user: (id: string) => doc(db, 'users', id).withConverter(userConverter),
     event: (id: string) => doc(db, 'events', id).withConverter(eventConverter),
+    group: (id: string) => doc(db, 'groups', id).withConverter(groupConverter),
+    activity: (id: string) => doc(db, 'activities', id).withConverter(activityConverter),
 };

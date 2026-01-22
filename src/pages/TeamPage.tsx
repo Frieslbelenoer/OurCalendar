@@ -9,19 +9,19 @@ export const TeamPage: React.FC = () => {
     // Mock roles for now as backend might not have them populated yet
     const getRole = (name: string) => {
         const n = name.toLowerCase();
-        if (n.includes('budi')) return { role: 'Rusher', game: 'Valorant' };
-        if (n.includes('fernando') || n.includes('user')) return { role: 'Support', game: 'Mobile Legends' };
-        if (n.includes('hartono')) return { role: 'Sniper', game: 'PUBG' };
-        return { role: 'Flex', game: 'All-Rounder' };
+        if (n.includes('budi')) return { role: 'Tukang Maju', game: 'Valorant' };
+        if (n.includes('fernando') || n.includes('user')) return { role: 'Babu Tim', game: 'Mobile Legends' };
+        if (n.includes('hartono')) return { role: 'Kang Ngendok', game: 'PUBG' };
+        return { role: 'Serba Bisa', game: 'Apa Aja Gas' };
     };
 
     return (
         <div className="p-8 h-full overflow-y-auto animate-fade-in custom-scrollbar">
             <div className="max-w-6xl mx-auto">
                 <header className="mb-10">
-                    <h1 className="text-3xl font-bold mb-2 text-white">Squad Members</h1>
+                    <h1 className="text-3xl font-bold mb-2 text-white">Anggota Circle</h1>
                     <p className="text-secondary text-lg font-light">
-                        {allUsers.filter(u => u.isOnline).length} Online • {allUsers.length} Members
+                        {allUsers.filter(u => u.isOnline).length} Onlen • {allUsers.length} Member
                     </p>
                 </header>
 
@@ -34,7 +34,7 @@ export const TeamPage: React.FC = () => {
                                 {/* Poke Button (Top Left) */}
                                 <button
                                     className="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-700/50 hover:bg-yellow-400 hover:text-black text-yellow-500 flex items-center justify-center transition-all shadow-sm transform hover:scale-110 active:scale-95 z-20"
-                                    title="Poke this user"
+                                    title="Colek member ini"
                                 >
                                     <span className="text-lg">⚡</span>
                                 </button>
@@ -59,7 +59,7 @@ export const TeamPage: React.FC = () => {
 
                                     <h3 className="text-lg font-bold text-white mb-1">{user.displayName}</h3>
                                     <p className="text-xs text-gray-400 mb-4 font-mono">
-                                        {user.isOnline ? 'In-Lobby' : user.lastSeen ? `Seen ${formatDistanceToNow(user.lastSeen, { addSuffix: true, locale: id })}` : 'Offline'}
+                                        {user.isOnline ? 'Lagi Mabar' : user.lastSeen ? `Terakhir Onlen ${formatDistanceToNow(user.lastSeen, { addSuffix: true, locale: id })}` : 'Turu'}
                                     </p>
 
                                     <div className="w-full space-y-2">

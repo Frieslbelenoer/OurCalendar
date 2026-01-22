@@ -7,7 +7,7 @@ import { useCalendar } from '../../context/CalendarContext'; // Import useCalend
 import { format } from 'date-fns';
 
 export const Layout: React.FC = () => {
-    const { isEventModalOpen, editingEvent, closeEventModal } = useCalendar();
+    const { isEventModalOpen, editingEvent, closeEventModal, eventModalMode } = useCalendar();
     // Current month for header (can be dynamic based on global state later if needed)
     const currentMonth = format(new Date(), 'MMMM yyyy');
 
@@ -25,6 +25,7 @@ export const Layout: React.FC = () => {
                 <EventModal
                     event={editingEvent}
                     onClose={closeEventModal}
+                    viewMode={eventModalMode}
                 />
             )}
         </div>

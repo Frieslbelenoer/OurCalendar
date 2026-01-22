@@ -8,9 +8,8 @@ import {
     signOut,
     onAuthStateChanged,
     User,
-    PhoneAuthProvider,
-    RecaptchaVerifier,
-    signInWithPhoneNumber
+    setPersistence,
+    browserLocalPersistence
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -25,6 +24,9 @@ import {
     query,
     where,
     orderBy,
+    limit,
+    arrayUnion,
+    arrayRemove,
     Timestamp,
     serverTimestamp
 } from 'firebase/firestore';
@@ -53,12 +55,16 @@ googleProvider.setCustomParameters({
 });
 
 // Auth Functions
+// Auth Functions
 export const signInWithGoogle = async () => {
     try {
+        // Apply Better Auth principle: Explicit Session Strategy
+        await setPersistence(auth, browserLocalPersistence);
         const result = await signInWithPopup(auth, googleProvider);
         return result.user;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Google sign-in error:', error);
+        // Map types strictly if possible, or re-throw sanitized error
         throw error;
     }
 };
@@ -137,6 +143,9 @@ export {
     query,
     where,
     orderBy,
+    limit,
+    arrayUnion,
+    arrayRemove,
     Timestamp,
     serverTimestamp,
     onAuthStateChanged

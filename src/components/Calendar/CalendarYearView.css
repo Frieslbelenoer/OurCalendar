@@ -1,0 +1,287 @@
+/* ... Previous Header Styles ... */
+
+.year-view-container {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center horizontally */
+    height: 100%;
+    overflow-y: auto;
+    color: var(--text-primary);
+    width: 100%;
+}
+
+.year-navigation {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-shrink: 0;
+}
+
+.nav-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: var(--bg-hover);
+    transform: scale(1.1);
+    border-color: var(--accent-purple);
+}
+
+.year-display-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    line-height: 0.8;
+}
+
+.year-row-top,
+.year-row-bottom {
+    display: flex;
+    font-size: 5rem;
+    /* Larger font for stacked look */
+    font-weight: 800;
+    overflow: hidden;
+    height: 1em;
+    /* Ensure rolling digits are contained */
+}
+
+/* Adjust digit wrapper for new size if necessary, usually standard EM works */
+.digit-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 0.6em;
+    height: 1em;
+    overflow: hidden;
+    text-align: center;
+}
+
+.digit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+}
+
+/* Animations */
+.digit.exit-up {
+    animation: slideOutUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.digit.enter-up {
+    animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.digit.exit-down {
+    animation: slideOutDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.digit.enter-down {
+    animation: slideInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideOutUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Year Grid Styles */
+.year-months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns usually nicer */
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    padding-bottom: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .year-months-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .year-months-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.month-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: transform var(--transition-fast);
+}
+
+.month-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.month-header {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.month-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent-purple);
+}
+
+.days-header-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 0.5rem;
+}
+
+.day-header-cell {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.day-header-cell.text-red {
+    color: var(--cal-red-text);
+}
+
+.days-grid-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.week-row-mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.mini-day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mini-day-cell:hover {
+    background: var(--bg-hover);
+    color: var(--accent-purple);
+}
+
+.mini-day-cell.text-grey {
+    color: var(--text-disabled);
+    pointer-events: none;
+}
+
+.mini-day-cell.text-red {
+    color: var(--cal-red-text);
+}
+
+.mini-day-cell.is-today {
+    background: var(--accent-purple);
+    color: white !important;
+    font-weight: bold;
+}
+
+.event-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: var(--event-blue);
+    /* Default */
+    border-radius: 50%;
+}
+
+.mini-day-cell {
+    position: relative;
+    /* Ensure the dot is positioned relative to the cell */
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

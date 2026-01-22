@@ -67,12 +67,12 @@ export const MessagesPage: React.FC = () => {
             <div className="p-4 border-b border-gray-700 bg-slate-900/50 flex items-center justify-between">
                 <div>
                     <h2 className="text-xl font-bold flex items-center gap-2">
-                        <span className="text-purple-400">#</span> General Chat
+                        <span className="text-purple-400">#</span> Bacotan Umum
                     </h2>
-                    <p className="text-xs text-secondary">Discuss monthly schedules with the team</p>
+                    <p className="text-xs text-secondary">Tempat diskusi jadwal mabar & gosip</p>
                 </div>
                 <div className="text-xs text-secondary">
-                    {messages.length} messages
+                    {messages.length} chat
                 </div>
             </div>
 
@@ -93,14 +93,14 @@ export const MessagesPage: React.FC = () => {
                             </div>
                             <div className={`flex flex-col max-w-[70%] ${isMe ? 'items-end' : 'items-start'}`}>
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm font-medium text-gray-300">{isMe ? 'You' : msg.senderName}</span>
+                                    <span className="text-sm font-medium text-gray-300">{isMe ? 'Lu' : msg.senderName}</span>
                                     <span className="text-xs text-gray-500">
-                                        {msg.createdAt?.toDate ? format(msg.createdAt.toDate(), 'h:mm a') : 'Just now'}
+                                        {msg.createdAt?.toDate ? format(msg.createdAt.toDate(), 'h:mm a') : 'Barusan'}
                                     </span>
                                 </div>
                                 <div className={`p-3 rounded-lg text-sm ${isMe
-                                        ? 'bg-purple-600 text-white rounded-tr-none'
-                                        : 'bg-slate-800 text-gray-200 rounded-tl-none border border-gray-700'
+                                    ? 'bg-purple-600 text-white rounded-tr-none'
+                                    : 'bg-slate-800 text-gray-200 rounded-tl-none border border-gray-700'
                                     }`}>
                                     {msg.text}
                                 </div>
@@ -118,7 +118,7 @@ export const MessagesPage: React.FC = () => {
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type a message..."
+                        placeholder="Ketik sesuatu yang unfaedah..."
                         className="flex-1 bg-slate-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 transition-colors"
                         disabled={isLoading}
                     />
@@ -127,7 +127,7 @@ export const MessagesPage: React.FC = () => {
                         disabled={isLoading || !newMessage.trim()}
                         className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                        Send
+                        Kirim
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="22" y1="2" x2="11" y2="13"></line>
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

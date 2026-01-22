@@ -54,19 +54,19 @@ export const LoginPage: React.FC = () => {
                             <circle cx="20" cy="17" r="1.5" fill="#EF4444" />
                         </svg>
                     </div>
-                    <h1>OurCalendar</h1>
-                    <p>Collaborative scheduling for teams</p>
+                    <h1>Basecamp Kita</h1>
+                    <p>Tempat Nongkrong & Mabar Tanpa Drama</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
                     {isSignUp && (
                         <div className="form-group">
-                            <label htmlFor="displayName">Display Name</label>
+                            <label htmlFor="displayName">Nama Panggung</label>
                             <input
                                 id="displayName"
                                 type="text"
                                 className="input"
-                                placeholder="Enter your name"
+                                placeholder="Panggilan lu siapa?"
                                 value={displayName}
                                 onChange={(e) => setDisplayName(e.target.value)}
                                 required
@@ -75,12 +75,12 @@ export const LoginPage: React.FC = () => {
                     )}
 
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">Email Lo</label>
                         <input
                             id="email"
                             type="email"
                             className="input"
-                            placeholder="Enter your email"
+                            placeholder="Email yang aktif ya"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -88,12 +88,12 @@ export const LoginPage: React.FC = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Sandi Rahasia</label>
                         <input
                             id="password"
                             type="password"
                             className="input"
-                            placeholder="Enter your password"
+                            placeholder="Jangan kasih tau orang lain"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -111,13 +111,13 @@ export const LoginPage: React.FC = () => {
                         {loading ? (
                             <span className="loading-spinner"></span>
                         ) : (
-                            isSignUp ? 'Create Account' : 'Sign In'
+                            isSignUp ? 'Gas Bikin Akun!' : 'Gas Masuk!'
                         )}
                     </button>
                 </form>
 
                 <div className="divider">
-                    <span>or continue with</span>
+                    <span>atau login pake</span>
                 </div>
 
                 <button
@@ -131,17 +131,17 @@ export const LoginPage: React.FC = () => {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    Continue with Google
+                    Gas Pake Google
                 </button>
 
                 <p className="login-toggle">
-                    {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                    {isSignUp ? 'Udah punya akun?' : "Belum punya akun?"}
                     <button
                         type="button"
                         onClick={() => setIsSignUp(!isSignUp)}
                         className="toggle-btn"
                     >
-                        {isSignUp ? 'Sign In' : 'Sign Up'}
+                        {isSignUp ? 'Masuk Sini' : 'Daftar Dulu'}
                     </button>
                 </p>
             </div>

@@ -7,8 +7,8 @@ import {
     signUpWithEmail,
     logOut,
     setupPresence,
+    onSnapshot,
     setDoc,
-    getDoc,
     User as FirebaseUser
 } from '../services/firebase';
 import { getRefs } from '../services/firestore';
@@ -42,61 +42,78 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+    // 1. Listen to Auth State
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
-            if (fbUser) {
-                setFirebaseUser(fbUser);
-
-                // Get or create user document
-                const userRef = getRefs.user(fbUser.uid);
-                const userSnap = await getDoc(userRef);
-
-                if (userSnap.exists()) {
-                    // With converter, .data() returns typed User object
-                    const userData = userSnap.data();
-                    setUser(userData);
-                } else {
-                    // Create new user document
-                    const newUser: User = {
-                        id: fbUser.uid,
-                        email: fbUser.email || '',
-                        displayName: fbUser.displayName || 'User',
-                        photoURL: fbUser.photoURL,
-                        phoneNumber: fbUser.phoneNumber,
-                        isOnline: true,
-                        // Provide dates directly, converter handles timestamp conversion
-                        lastSeen: new Date(),
-                        currentActivity: 'Just joined',
-                        createdAt: new Date()
-                    };
-
-                    await setDoc(userRef, newUser);
-                    setUser(newUser);
-                }
-
-                // Setup presence
-                setupPresence(fbUser.uid);
-            } else {
-                setFirebaseUser(null);
+        const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
+            setFirebaseUser(fbUser || null);
+            if (!fbUser) {
                 setUser(null);
+                setLoading(false);
+            }
+        });
+        return () => unsubscribe();
+    }, []);
+
+    // 2. Listen to User Document (Real-time)
+    useEffect(() => {
+        if (!firebaseUser) return;
+
+        setLoading(true);
+        const userRef = getRefs.user(firebaseUser.uid);
+
+        const unsubscribe = onSnapshot(userRef, async (docSnap) => {
+            if (docSnap.exists()) {
+                setUser(docSnap.data());
+            } else {
+                // Create new user document
+                const newUser: User = {
+                    id: firebaseUser.uid,
+                    email: firebaseUser.email || '',
+                    displayName: firebaseUser.displayName || 'User',
+                    photoURL: firebaseUser.photoURL,
+                    phoneNumber: firebaseUser.phoneNumber,
+                    isOnline: true,
+                    lastSeen: new Date(),
+                    currentActivity: 'Just joined',
+                    createdAt: new Date()
+                };
+
+                await setDoc(userRef, newUser);
+                // Snapshot listener will fire again with new data
             }
             setLoading(false);
         });
 
+        setupPresence(firebaseUser.uid);
+
         return () => unsubscribe();
-    }, []);
+    }, [firebaseUser]);
 
     const handleSignInWithGoogle = async () => {
+        if (isAuthenticating) return; // Prevent double clicks (Rate Limit Principle)
+
         try {
+            setIsAuthenticating(true);
             setError(null);
             await signInWithGoogle();
         } catch (err: any) {
             console.error("Auth Error:", err);
+            // Better-Auth style error mapping for security/clarity
+            let message = "An unexpected error occurred during sign in.";
             if (err.code === 'auth/unauthorized-domain') {
-                setError(`Domain unauthorized (${window.location.hostname}). Add it to Firebase Console > Auth > Settings > Domains.`);
-            } else {
-                setError(err.message);
+                message = `Domain unauthorized (${window.location.hostname}). Add it to Firebase Console > Auth > Settings > Domains.`;
+            } else if (err.code === 'auth/popup-closed-by-user') {
+                message = "The sign-in window was closed before completion.";
+            } else if (err.code === 'auth/popup-blocked') {
+                message = "Sign-in popup was blocked by your browser. Please allow popups for this site.";
+            } else if (err.code === 'auth/network-request-failed') {
+                message = "Network error. Please check your internet connection.";
             }
+            setError(message);
+        } finally {
+            setIsAuthenticating(false);
         }
     };
 

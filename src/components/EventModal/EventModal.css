@@ -242,3 +242,85 @@
 .btn-danger:hover {
     background: #dc2626;
 }
+
+/* VIEW CARD MODE */
+.view-card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.view-card-header {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.view-card-header.bg-purple {
+    background-color: var(--event-purple);
+}
+
+.view-card-header.bg-blue {
+    background-color: var(--event-blue);
+}
+
+.view-card-header.bg-red {
+    background-color: var(--event-red);
+}
+
+.view-card-header.bg-green {
+    background-color: var(--event-green);
+}
+
+.view-card-header.bg-orange {
+    background-color: var(--event-orange);
+}
+
+.view-card-header.bg-pink {
+    background-color: var(--event-pink);
+}
+
+.view-card-header.bg-teal {
+    background-color: var(--event-teal);
+}
+
+.header-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background-image: radial-gradient(circle at 20% 120%, rgba(255, 255, 255, 0.8) 0%, transparent 50%),
+        radial-gradient(circle at 80% -20%, rgba(0, 0, 0, 0.2) 0%, transparent 50%);
+}
+
+.close-btn-floating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.close-btn-floating:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: rotate(90deg);
+}
+
+.view-card-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
