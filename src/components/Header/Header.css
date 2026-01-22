@@ -235,3 +235,23 @@
     font-size: 0.75rem;
     color: var(--text-muted);
 }
+
+.theme-toggle-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-icon {
+    animation: rotate-in 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes rotate-in {
+    0% {
+        transform: rotate(-90deg) scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0) scale(1);
+        opacity: 1;
+    }
+}

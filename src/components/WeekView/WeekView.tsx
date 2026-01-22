@@ -72,7 +72,7 @@ const YearGridView: React.FC<{ selectedDate: Date, holidays: Holiday[], setSelec
                                     let className = 'ref-day-cell ';
                                     if (!isCurrentMonth) className += 'text-grey ';
                                     else if (isSunday || isHoliday) className += 'text-red ';
-                                    else className += 'text-black ';
+                                    else className += 'text-cal-primary ';
                                     if (isToday) className += 'is-today ';
 
                                     return (

@@ -136,13 +136,19 @@
 }
 
 .ref-day-cell.is-today {
-    background: var(--cal-red-block);
-    /* Updated to Red Block */
-    color: white !important;
+    background: var(--cal-black-block);
+    color: var(--bg-primary) !important;
+}
+
+/* ... */
+
+.month-cell.other-month {
+    background: var(--bg-tertiary);
+    opacity: 0.5;
 }
 
 /* Text Colors */
-.text-black {
+.text-cal-primary {
     color: var(--cal-black-text);
 }
 
@@ -313,12 +319,11 @@
 
 .ref-day-cell.is-today {
     background: var(--cal-black-block);
-    color: white !important;
-    /* Force white on black block */
+    color: var(--bg-primary) !important;
 }
 
 /* Text Colors */
-.text-black {
+.text-cal-primary {
     color: var(--cal-black-text);
 }
 
